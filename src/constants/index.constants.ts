@@ -6,11 +6,17 @@ config();
 
 export const {
   ENVIRONMENT,
-  JWT_SECRET_KEY,
+  JWT_AUTH_SECRET_KEY,
   COOKIE_SECRET_KEY,
   MONGO_URL,
   NODE_ENV,
   PORT,
+  MAIL_SENDER,
+  JWT_PASSWORD_RESET_REQUEST_SECRET_KEY,
+  APP_NAME,
+  API_KEY,
+  JWT_PASSWORD_RESET_SECRET_KEY,
+  MONGO_TEST_URL,
 } = process.env;
 
 /**
@@ -45,7 +51,7 @@ export const ORIGIN = ENVIRONMENT === 'production'
   ? PRODUCTION_URL
   : ENVIRONMENT === 'staging'
     ? [STAGING_URL, DEMO_URL, LOCAL_URL]
-    : LOCAL_URL;
+    : '*';
 
 /**
  * Config options for cors
@@ -69,22 +75,22 @@ export const APP_USE_LIMIT = RateLimiter({
 });
 
 /**
- * Prevents brute force password hack. Allows 5 login attempts every 10 minutes
+ * Prevents brute force password hack. Allows 10 login attempts every 10 minutes
  * @constant
  */
 export const MAX_LOGIN_LIMITER = RateLimiter({
-  windowMs: 5 * 60 * 1000, // 10 minutes
+  windowMs: 10 * 60 * 1000, // 10 minutes
   max: 10, // limit each IP to 10 requests every 10 minutes,
   message: 'Too many login attempts, please try again after 5 minutes.',
 });
 
 /**
- * Limit password reset attempts. Allows 5 password reset attemts in an hour
+ * Limit password reset attempts. Allows 10 password reset attemts in an hour
  * @constant
  */
 export const MAX_PASSWORD_RESET_LIMITER = RateLimiter({
   windowMs: 60 * 60 * 1000, // 30 minutes
-  max: 5, // limit each IP to 5 requests every 30 minutes
+  max: 10, // limit each IP to 5 requests every 30 minutes
   message:
     'Too many password reset attempts, please try again after 30 minutes.',
 });
@@ -94,12 +100,6 @@ export const MAX_PASSWORD_RESET_LIMITER = RateLimiter({
  * @constant
  */
 export const API_VERSION_ONE_URL = '/api/v1';
-
-/**
- * Application name
- * @constant
- */
-export const APP_NAME = 'PE-GRID Admin';
 
 /**
  * API routes
@@ -121,3 +121,9 @@ export const VERSION_ONE_TEST_ROUTE = '/api/v1';
  * @const
  */
 export const SALT_ROUNDS = 10;
+
+/**
+ * This is the key for storing auth tokens when we need to send them
+ * to the front end
+ */
+export const AUTH_HEADER_TOKEN_KEY = 'x-auth-token';

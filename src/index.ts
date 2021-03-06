@@ -15,6 +15,7 @@ import {
 } from './constants/index.constants';
 
 import { invalidRoute, log, connectToDB } from './helpers/index.helpers';
+import { isAllowedDevice } from './middleware/user.middleware';
 import versionOneRouter from './router/index.router';
 
 const app = express();
@@ -26,6 +27,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cookieParser(COOKIE_SECRET_KEY));
 
+// block non browser agents that are not authorised by us
+app.use(isAllowedDevice);
+
 // handle every valid request i.e request to api/v1
 app.use(API_VERSION_ONE_URL, versionOneRouter);
 
@@ -36,7 +40,7 @@ connectToDB();
 
 if (NODE_ENV !== 'test') {
   app.listen(PORT, () => {
-    log(`App running on port ${process.env.PORT}`);
+    log(`App running on port ${PORT}`);
   });
 }
 

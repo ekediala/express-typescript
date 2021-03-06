@@ -1,6 +1,7 @@
 import { ROUTES } from '../constants/index.constants';
 import { Router } from 'express';
 import { invalidRoute, testRoute } from '../helpers/index.helpers';
+import { userRouter } from './user.router';
 
 const { WILD_CARD, HOME } = ROUTES;
 
@@ -12,6 +13,6 @@ testRouter.all(HOME, testRoute);
 const invalidRoutes = Router();
 invalidRoutes.all(WILD_CARD, invalidRoute);
 
-const versionOneRouter = [testRouter, invalidRoutes];
+const versionOneRouter = [testRouter, userRouter, invalidRoutes];
 
 export default versionOneRouter;
